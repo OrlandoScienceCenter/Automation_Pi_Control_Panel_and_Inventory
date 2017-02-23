@@ -1,0 +1,120 @@
+<html>
+   <body>
+     <script>
+      function selAll() {
+        var allInputs = document.getElementsByTagName("input");
+        for (var i = 0, max = allInputs.length; i < max; i++){
+         if (allInputs[i].type === 'checkbox' && allInputs[i].name != 'Exhibits on Timer')
+         allInputs[i].checked = true;
+        }
+      }
+
+      function clearAll() {
+        var allInputs = document.getElementsByTagName("input");
+        for (var i = 0, max = allInputs.length; i < max; i++){
+         if (allInputs[i].type === 'checkbox')
+           allInputs[i].checked = false;
+        }
+      }
+
+      function sel2() {
+        var allInputs = document.getElementsByTagName("input");
+        for (var i = 0, max = allInputs.length; i < max; i++){
+         if (allInputs[i].type === 'checkbox'){
+           if (allInputs[i].id === '2nd')
+             allInputs[i].checked = document.getElementById("2nd_fl").checked; 
+         }
+        }
+
+
+      }
+
+      function sel3() {
+        var allInputs = document.getElementsByTagName("input");
+        for (var i = 0, max = allInputs.length; i < max; i++){
+         if (allInputs[i].type === 'checkbox'){
+           if (allInputs[i].id === '3rd')
+             allInputs[i].checked = document.getElementById("3rd_fl").checked; 
+         }
+        }
+
+         
+      }
+
+      function sel4() {
+        var allInputs = document.getElementsByTagName("input");
+        for (var i = 0, max = allInputs.length; i < max; i++){
+         if (allInputs[i].type === 'checkbox'){
+           if (allInputs[i].id === '4th')
+             allInputs[i].checked = document.getElementById("4th_fl").checked; 
+         }
+        }
+      }
+     </script>
+ 
+         {{ message }}
+
+       <table border = 1>
+         <form action = "http://192.168.1.254/exhibitspanel/byfloorroom" method = "POST"><br>
+          <tr>
+            <td>
+              <input id="4th_fl" type="checkbox" name="4th_floor" value="Fourth Floor" onclick="sel4()"  {% if '4th_floor' in result %}checked="True"{% endif %}>Fourth Floor:
+              <ul>
+              <input id="4th" type="checkbox" name="Our Planet" value="Our Planet" {% if 'Our Planet' in result %}checked="True"{% endif %}>Our Planet<br>
+              <input id="4th" type="checkbox" name="Dino Digs" value="Dino Digs" {% if 'Dino Digs' in result %}checked="True"{% endif %} >Dino Digs<br>
+              <input id="4th" type="checkbox" name="Fourth Floor Rotunda" value="Fourth Floor Rotunda" {% if 'Fourth Floor Rotunda' in result %}checked="True"{% endif %}>Fourth Floor Rotunda
+              </ul>
+
+              <input id="3rd_fl" type="checkbox" name="3rd_floor" value="Third Floor" onclick="sel3();" {% if '3rd_floor' in result %}checked="True"{% endif %}>Third Floor:
+              <ul>
+              <input id="3rd" type="checkbox" name="Engineer It" value="Engineer It" {% if 'Engineer It' in result %}checked="True"{% endif %}>Engineer It<br>
+              <input id="3rd" type="checkbox" name="Third Floor Rotunda" value="Third Floor Rotunda" {% if 'Third Floor Rotunda' in result %}checked="True"{% endif %}>Third Floor Rotunda
+              </ul>
+
+              <input id="2nd_fl" type="checkbox" name="2nd_floor" value="Second Floor" onclick="sel2();" {% if '2nd_floor' in result %}checked="True"{% endif %}>Second Floor:
+              <ul>
+              <input id="2nd" type="checkbox" name="KT Orange Grove" value="KT Orange Grove" {% if 'KT Orange Grove' in result %}checked="True"{% endif %}>KT Orange Grove<br>
+              <input id="2nd" type="checkbox" name="KT Drip Drop Splash" value="KT Drip Drop Splash" {% if 'KT Drip Drop Splash' in result %}checked="True"{% endif %}>KT Drip Drop Splash<br>
+              <input id="2nd" type="checkbox" name="KT Theater" value="KT Theater" {% if 'KT Theater' in result %}checked="True"{% endif %}>KT Theater<br>
+              <input id="2nd" type="checkbox" name="KT Climb Time" value="KT Climb Time" {% if 'KT Climb Time' in result %}checked="True"{% endif %}>KT Climb Time<br>
+              <input id="2nd" type="checkbox" name="Kinetic Zone" value="Kinetic Zone" {% if 'Kinetic Zone' in result %}checked="True"{% endif %}>Kinetic Zone<br>
+              <input id="2nd" type="checkbox" name="Travelling Exhibit" value="Travelling Exhibit" {% if 'Travelling Exhibit' in result %}checked="True"{% endif %}>Travelling Exhibit<br>
+              <input id="2nd" type="checkbox" name="Lobby" value="Lobby" {% if 'Lobby' in result %}checked="True"{% endif %}>Lobby<br>
+              <input id="2nd" type="checkbox" name="Second Floor Rotunda" value="Second Floor Rotunda"  {% if 'Second Floor Rotunda' in result %}checked="True"{% endif %}>Second Floor Rotunda<br>
+              </ul>
+              <input id="timer" type="checkbox" name="Exhibits on Timer" value="Exhibits on Timer"  {% if 'Exhibits on Timer' in result %}checked="True"{% endif %}>Exhibits on Timer<br>
+            </td>
+            <td>
+                 &nbsp;<input type = "submit" name = "" value = "Search In Selected Rooms" />&nbsp;<br><br>
+                 &nbsp;<input id="select_all" type = "button" name = "" value="Select All" onclick="selAll();" /><br><br>
+                 &nbsp;<input id="clear_all" type = "button" name = "" value="Clear All" onClick="clearAll();" />
+               </td>
+          </tr>
+          <tr>
+            <td><br>
+               &nbsp;<input type = "submit" name = "button_allon" value = "Power On All Exhibits in Above Selected Rooms/Floors" />&nbsp;<br><br>
+               &nbsp;<input type = "submit" name = "button_alloff" onclick="return confirm('You are about to shut off all exhibits in the above selected rooms. Are you sure?')" value = "Power Off All Exhibits in Above Selected Rooms/Floors"" />&nbsp;
+            </td>
+<td>
+Note: You don't have to click search before <br>using these buttons, you can just select the<br> rooms you want to control and then click one.
+</td>
+          </tr>
+          <tr>
+          
+          </tr>
+
+         {% for i in range(0, number_of_exhibits) %}
+            <tr>
+            <td>&nbsp;{% if number_of_exhibits > 0 %} {{ selected_exhibits[i]['name'] }}</td>
+            <td><br>
+               &nbsp;<input type = "submit" name = "button_poweron{{ i }}" ip = "{{ selected_exhibits[i]['ip'] }}" value = "Power On" /><br><br>
+               &nbsp;<input type = "submit" name = "button_poweroff{{ i }}" ip = "{{ selected_exhibits[i]['ip'] }}" value = "Power Off" />&nbsp;
+            </td>
+          </tr>
+           {% endif %}
+         {% endfor %}
+       </form>
+
+      </table>
+   </body>
+</html>

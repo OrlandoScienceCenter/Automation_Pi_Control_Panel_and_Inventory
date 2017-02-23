@@ -1,0 +1,27 @@
+<html>
+   <body>
+      <table border = 1>
+          <tr>
+              <td><form action = "http://192.168.1.254/exhibitspanel/deleteexhibit" method = "POST">
+
+         <select name="dropdown_exhibittodelete">
+         {% for i in range(0, num_exhibits) %}
+             <option value="{{ exhibit[i]["name"] }}">{{ exhibit[i]["name"] }}</option>
+         {% endfor %}
+         </select>
+              </td>     
+          </tr>
+
+          <tr>
+            <td><br>
+               &nbsp;<input type = "submit" name = "button_deleteexhibit" value = "Delete Exhibit" />
+            </form>
+
+               <form action = "http://192.168.1.254/exhibitspanel" method = "GET">
+                   &nbsp;<input type = "submit" name = "button_deletecancel" value = "Cancel" />&nbsp;<br><br>
+               </form>
+            </td>
+          </tr>
+      </table>
+   </body>
+</html>

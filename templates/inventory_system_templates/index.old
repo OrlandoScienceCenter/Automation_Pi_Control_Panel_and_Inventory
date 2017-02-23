@@ -1,0 +1,23 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html>
+   <body>
+      <b>Items in {{ location }}</b>
+      <table border = 0>
+          <tr><td>&nbsp;</td></tr>
+          <tr>
+              <td>Tinker Toys</td><td>&nbsp</td><td>200</td><td>&nbsp</td><td><button type="button">-1</button>&nbsp<button type="button">-2</button>&nbsp<button type="button">-5</button>&nbsp<button type="button">-10</button>&nbsp<button type="button">-#</button>&nbsp<button type="button">#?</button></td>
+          </tr>
+          <tr>
+              <td>Gear Table Gears</td><td>&nbsp</td><td>6</td><td>&nbsp</td><td><button type="button">-1</button>&nbsp<button type="button">-2</button>&nbsp<button type="button">-5</button>&nbsp<button type="button">-10</button>&nbsp<button type="button">-#</button>&nbsp<button type="button">#?</button></td>
+          </tr>
+          <tr>
+              <td>Lego Boats</td><td>&nbsp</td><td>4</td><td>&nbsp</td><td><button type="button">-1</button>&nbsp<button type="button">-2</button>&nbsp<button type="button">-5</button>&nbsp<button type="button">-10</button>&nbsp<button type="button">-#</button>&nbsp<button type="button">#?</button></td>
+          </tr>
+          <tr><td>&nbsp;</td></tr>
+          <tr>
+              <td><button type="button">Item Not Listed</button></td>
+          </tr>
+      </table>
+   </body>
+</html>

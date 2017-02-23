@@ -1,0 +1,30 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html>
+   <body>
+      <b>Items in {{ location }}</b>
+
+      <table border = 0>
+         <form action = "http://192.168.1.254/inventory/update_qty_page/{{ location }}" method = "POST"><br>
+
+       {% for i in range(0, num_items_in_location) %}
+            <tr>
+              <td>&nbsp;{{ item_names[i] }} </td>
+                    <td>{{ item_quantities[i] }}</td><td>&nbsp</td>
+              <td>
+                <input type = "submit" name = "button_subone{{ i }}" value = "1" />&nbsp;
+                <input type = "submit" name = "button_subfive{{ i }}" value = "5" />&nbsp;
+                <input type = "submit" name = "button_subtwenty{{ i }}" value = "20" />&nbsp;
+              </td>
+          </tr>
+         {% endfor %}
+
+          <tr>
+		  <td><a href="mailto:ccatto@osc.org?subject=Unlisted item in {{ location }}&body=I took an item from {{ location }} and it was not listed in the google spreadsheet. Please add it, it is: "><button type="button">Unlisted</button></a>&nbsp;
+		  <a href="mailto:ccatto@osc.org?subject=Quantity incorrect in {{ location }}&body=I took an item from {{ location }} and the quantity in the google spreadsheet is incorrect. Please fix it, the item and quantity are: "><button type="button">Qty Wrong</button></a></td>
+          </tr>
+
+         </form>
+      </table>
+   </body>
+</html>
