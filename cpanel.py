@@ -49,6 +49,13 @@ def exhibits_panel():
                 except:
                     connection_failed = exhibit[i]["name"]
 
+            if 'button_ota' + str(i) in result:
+                try:
+                    (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "startOTA", qos=1)
+                    break
+                except:
+                    connection_failed = exhibit[i]["name"]
+
             if 'button_allon' in result:
                 for i in range(0, num_exhibits):
                     try:
@@ -177,7 +184,13 @@ def by_floor_room():
                     (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "powerOff", qos=1)
                 except:
                     connection_failed.append([selected_exhibits[i]["name"]])
-               
+
+        if 'button_ota' + str(i) in result:
+            try:
+                (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "startOTA", qos=1)
+            except:
+                connection_failed = exhibit[i]["name"]
+
         for i in range(0, number_of_exhibits): 
             if 'button_poweron' + str(i) in result:
                 message = 'No communication errors, exhibit turned on succesfully.'
