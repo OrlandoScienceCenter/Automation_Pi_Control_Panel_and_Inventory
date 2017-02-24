@@ -1,3 +1,5 @@
+import paho.mqtt.client as paho
+
 # Control Panel Vars
 db = TinyDB('exhibits_config_db.json')
 exhibit = ['0'] * len(db)
@@ -6,7 +8,13 @@ num_exhibits = len(db)
 rooms_to_match = []
 selected_exhibits = []
 
-# -----===== Begin Exhibits Control Panel Section =====-----
+def on_publish(client, userdata, mid):
+    print("sent command")
+
+client = paho.Client(client_id="PZ_RasPi", clean_session=True, protocol=paho.MQTTv311)
+client.on_publish = on_publish
+client.connect("localhost", 1883, keepalive=60)
+client.loop_start()
 
 @app.route('/exhibitspanel', methods = ['POST', 'GET'])
 def exhibits_panel():
@@ -22,14 +30,21 @@ def exhibits_panel():
         for i in range(0, num_exhibits): 
             if 'button_poweron' + str(i) in result:
                 try:
-                    r = requests.get('http://' + exhibit[i]["ip"] + '/poweron')
+                    (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "powerOn", qos=1)
                     break
                 except:
                     connection_failed = exhibit[i]["name"]
 
             if 'button_poweroff' + str(i) in result:
                 try:
-                    r = requests.get('http://' + exhibit[i]["ip"] + '/poweroff')
+                    (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "powerOff", qos=1)
+                    break
+                except:
+                    connection_failed = exhibit[i]["name"]
+
+            if 'button_reset' + str(i) in result:
+                try:
+                    (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "powerReset", qos=1)
                     break
                 except:
                     connection_failed = exhibit[i]["name"]
@@ -37,7 +52,7 @@ def exhibits_panel():
             if 'button_allon' in result:
                 for i in range(0, num_exhibits):
                     try:
-                        r = requests.get('http://' + exhibit[i]["ip"] + '/poweron')
+                        (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "powerOn", qos=1)
                     except:
                         connection_failed.append([exhibit[i]["name"]])
                
@@ -52,7 +67,7 @@ def exhibits_panel():
             if 'button_alloff' in result:
                 for i in range(0, num_exhibits):
                     try:
-                        r = requests.get('http://' + exhibit[i]["ip"] + '/poweroff')
+                        (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "powerOff", qos=1)
                     except:
                         connection_failed.append([exhibit[i]["name"]])
                
@@ -75,12 +90,11 @@ def exhibits_panel():
 def add_new_exhibit():
      if request.method == 'POST':
          result = request.form
-         db.insert({'name' : str(result["textbox_name"]), 'ip' : str(result["textbox_ip"]), 
-             'type' : str(result["textbox_type"]), 'room' : str(result["textbox_room"]), 
-             'floor' : str(result["textbox_floor"]), 'ignore_exhibit' : str(result["textbox_ignore"]), 
-             'automatically_restart' : str(result["textbox_autoreset"]), 
-             'exhibit_shutdown_time' : str(result["textbox_shutdowntime"]), 
-             'downtime_on_reset' : str(result["textbox_downtimeonreset"]) })
+         db.insert({'name' : str(result["textbox_name"]),
+             'floor' : str(result["textbox_floor"]),
+             'room' : str(result["textbox_room"]),
+             'type' : str(result["textbox_type"]),
+             'mqtt_topic' : str(result["mqtt_topic"]) })
          return 'Exhibit added.<br><br><a href="/exhibitspanel">Web Control Panel</a>'
 
      if request.method == 'GET':
@@ -146,15 +160,21 @@ def by_floor_room():
             message = 'No communication errors, all exhibits turned on succesfully.'
             for i in range(0, number_of_exhibits):
                 try:
-                    r = requests.get('http://' + selected_exhibits[i]["ip"] + '/poweron')
+                    (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "powerOn", qos=1)
                 except:
                     connection_failed.append([selected_exhibits[i]["name"]])
-              
+
+        if 'button_reset' + str(i) in result:
+            try:
+                (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "powerReset", qos=1)
+            except:
+                connection_failed = exhibit[i]["name"]
+
         if 'button_alloff' in result:
             message = 'No communication errors, all exhibits turned off succesfully.'
             for i in range(0, number_of_exhibits):
                 try:
-                    r = requests.get('http://' + selected_exhibits[i]["ip"] + '/poweroff')
+                    (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "powerOff", qos=1)
                 except:
                     connection_failed.append([selected_exhibits[i]["name"]])
                
@@ -162,7 +182,7 @@ def by_floor_room():
             if 'button_poweron' + str(i) in result:
                 message = 'No communication errors, exhibit turned on succesfully.'
                 try:
-                    r = requests.get('http://' + selected_exhibits[i]["ip"] + '/poweron')
+                    (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "powerOn", qos=1)
                     break
                 except:
                     connection_failed = selected_exhibits[i]["name"]
@@ -170,7 +190,7 @@ def by_floor_room():
             if 'button_poweroff' + str(i) in result:
                 message = 'No communication errors, exhibit turned off succesfully.'
                 try:
-                    r = requests.get('http://' + selected_exhibits[i]["ip"] + '/poweroff')
+                    (rc, mid) = client.publish(exhibit[i]["mqtt_topic"], "powerOff", qos=1)
                     break
                 except:
                     connection_failed = selected_exhibits[i]["name"]
@@ -188,5 +208,3 @@ def by_floor_room():
     if request.method == 'GET':
         return render_template("cpanel_templates/byfloorroom.html", selected_exhibits = selected_exhibits, 
                 number_of_rooms_to_match = number_of_rooms_to_match, number_of_exhibits = number_of_exhibits, message = message)
-
-# -----===== End Exhibits Control Panel Section =====-----

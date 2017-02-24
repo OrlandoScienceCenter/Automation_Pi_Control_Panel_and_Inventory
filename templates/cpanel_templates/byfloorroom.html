@@ -107,8 +107,9 @@ Note: You don't have to click search before <br>using these buttons, you can jus
             <tr>
             <td>&nbsp;{% if number_of_exhibits > 0 %} {{ selected_exhibits[i]['name'] }}</td>
             <td><br>
-               &nbsp;<input type = "submit" name = "button_poweron{{ i }}" ip = "{{ selected_exhibits[i]['ip'] }}" value = "Power On" /><br><br>
-               &nbsp;<input type = "submit" name = "button_poweroff{{ i }}" ip = "{{ selected_exhibits[i]['ip'] }}" value = "Power Off" />&nbsp;
+               &nbsp;<input type = "submit" name = "button_poweron{{ i }}" value = "Power On" /><br><br>
+	       &nbsp;<input type = "submit" name = "button_poweroff{{ i }}" value = "Power Off" /><br><br>
+               &nbsp;<input type = "submit" name = "button_reset{{ i }}" value = "Reset Exhibit" />&nbsp;
             </td>
           </tr>
            {% endif %}
